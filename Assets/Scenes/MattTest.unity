@@ -289,7 +289,7 @@ MeshCollider:
   serializedVersion: 5
   m_Convex: 0
   m_CookingOptions: 30
-  m_Mesh: {fileID: 1546025876}
+  m_Mesh: {fileID: 64767821}
 --- !u!33 &38127033
 MeshFilter:
   m_ObjectHideFlags: 10
@@ -645,7 +645,7 @@ MeshCollider:
   serializedVersion: 5
   m_Convex: 0
   m_CookingOptions: 30
-  m_Mesh: {fileID: 779646320}
+  m_Mesh: {fileID: 1106072048}
 --- !u!33 &45906151
 MeshFilter:
   m_ObjectHideFlags: 10
@@ -3132,7 +3132,7 @@ MeshCollider:
   serializedVersion: 5
   m_Convex: 0
   m_CookingOptions: 30
-  m_Mesh: {fileID: 1097905950}
+  m_Mesh: {fileID: 779646320}
 --- !u!33 &543854770
 MeshFilter:
   m_ObjectHideFlags: 10
@@ -3431,6 +3431,11 @@ MonoBehaviour:
   m_SelectedFaces: 
   m_SelectedEdges: []
   m_SelectedVertices: 
+--- !u!4 &641022314 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 6433166623560123746, guid: a94efac50ffe3c247aa1c14b4d8bebc1, type: 3}
+  m_PrefabInstance: {fileID: 8589191546576745161}
+  m_PrefabAsset: {fileID: 0}
 --- !u!43 &648500442
 Mesh:
   m_ObjectHideFlags: 0
@@ -9482,7 +9487,7 @@ MeshCollider:
   serializedVersion: 5
   m_Convex: 0
   m_CookingOptions: 30
-  m_Mesh: {fileID: 117915421}
+  m_Mesh: {fileID: 1546025876}
 --- !u!33 &743348664
 MeshFilter:
   m_ObjectHideFlags: 10
@@ -24011,7 +24016,7 @@ MeshCollider:
   serializedVersion: 5
   m_Convex: 0
   m_CookingOptions: 30
-  m_Mesh: {fileID: 648500442}
+  m_Mesh: {fileID: 668297483}
 --- !u!33 &1763784739
 MeshFilter:
   m_ObjectHideFlags: 10
@@ -34725,6 +34730,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 786115944955146380, guid: a94efac50ffe3c247aa1c14b4d8bebc1, type: 3}
+      propertyPath: m_Radius
+      value: 0.5
+      objectReference: {fileID: 0}
     - target: {fileID: 4487558115815528367, guid: a94efac50ffe3c247aa1c14b4d8bebc1, type: 3}
       propertyPath: m_LocalPosition.x
       value: -4
@@ -34769,6 +34778,14 @@ PrefabInstance:
       propertyPath: m_Name
       value: Player
       objectReference: {fileID: 0}
+    - target: {fileID: 8431170679897149040, guid: a94efac50ffe3c247aa1c14b4d8bebc1, type: 3}
+      propertyPath: rotationSpeed
+      value: 15
+      objectReference: {fileID: 0}
+    - target: {fileID: 8431170679897149040, guid: a94efac50ffe3c247aa1c14b4d8bebc1, type: 3}
+      propertyPath: cameraTransform
+      value: 
+      objectReference: {fileID: 641022314}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []

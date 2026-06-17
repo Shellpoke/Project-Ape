@@ -7,6 +7,7 @@ public class ThirdPersonController : MonoBehaviour
     [Header("Movement")]
     public float slowSpeed = 1f;
     public float fastSpeed = 20f;
+    public float acceleration = 2f;
     public float rotationSpeed = 10f;
 
     [Header("Jumping")]
@@ -24,6 +25,7 @@ public class ThirdPersonController : MonoBehaviour
     private Vector3 velocity;
     private bool walker;
     private float verticalLookRotation;
+
 
     void Awake()
     {
@@ -81,12 +83,12 @@ public class ThirdPersonController : MonoBehaviour
         right.Normalize();
         Vector3 moveDirection = forward * moveInput.y + right * moveInput.x;
         float inputMagnitude = Mathf.Clamp01(moveInput.magnitude);
-        
+
         //ifelse used to let keyboard users walk using shift.
         if (walker)
-            {
+        {
             speed = slowSpeed;
-            }
+        }
         else
         {
             speed = Mathf.Lerp(slowSpeed, fastSpeed, inputMagnitude); //Lerp handles the speed scaling from the joystick
@@ -106,7 +108,6 @@ public class ThirdPersonController : MonoBehaviour
         {
             velocity.y += gravity * Time.deltaTime;
         }
-        Debug.Log("Mango: " + velocity.y);
     }
 
     void Jump()
