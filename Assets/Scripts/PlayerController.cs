@@ -97,12 +97,16 @@ public class ThirdPersonController : MonoBehaviour
 
     void ApplyGravity()
     {
+        controller.Move(velocity * Time.deltaTime);
         if (controller.isGrounded && velocity.y < 0)
         {
             velocity.y = -2f;
         }
-        velocity.y += gravity * Time.deltaTime;
-        controller.Move(velocity * Time.deltaTime);
+        else
+        {
+            velocity.y += gravity * Time.deltaTime;
+        }
+        Debug.Log("Mango: " + velocity.y);
     }
 
     void Jump()
