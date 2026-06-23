@@ -10191,6 +10191,11 @@ Mesh:
       - serializedVersion: 1
         m_IndexStart: 0
         m_IndexCount: 0
+--- !u!4 &910917019 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 6409454924679641053, guid: a94efac50ffe3c247aa1c14b4d8bebc1, type: 3}
+  m_PrefabInstance: {fileID: 8589191546576745161}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &932231568
 GameObject:
   m_ObjectHideFlags: 0
@@ -34782,6 +34787,10 @@ PrefabInstance:
       propertyPath: rotationSpeed
       value: 15
       objectReference: {fileID: 0}
+    - target: {fileID: 8431170679897149040, guid: a94efac50ffe3c247aa1c14b4d8bebc1, type: 3}
+      propertyPath: modelTransform
+      value: 
+      objectReference: {fileID: 910917019}
     - target: {fileID: 8431170679897149040, guid: a94efac50ffe3c247aa1c14b4d8bebc1, type: 3}
       propertyPath: cameraTransform
       value: 

@@ -5,17 +5,19 @@ using UnityEngine.InputSystem;
 public class ThirdPersonController : MonoBehaviour
 {
     [Header("Movement")]
+    public Transform modelTransform; //The Character Model Goes here in the editor
     public float slowSpeed = 1f;
     public float fastSpeed = 20f;
     public float acceleration = 2f;
     public float rotationSpeed = 10f;
+    public float rotateSpeed = 10f;
 
     [Header("Jumping")]
     public float jumpHeight = 10f;
     public float gravity = -90f;
 
     [Header("Camera")]
-    public Transform cameraTransform;
+    public Transform cameraTransform; //The Camera pivot goes here in editor
 
     //private variables
     private CharacterController controller;
@@ -25,7 +27,12 @@ public class ThirdPersonController : MonoBehaviour
     private Vector3 velocity;
     private bool walker;
     private float verticalLookRotation;
+    private Vector3 moveDirection;
 
+
+    /*
+    --------------------------------------- UNITY'S EXECUTION FUNCTIONS -----------------------------------------------------------------------
+    */
 
     void Awake()
     {
@@ -60,28 +67,35 @@ public class ThirdPersonController : MonoBehaviour
 
     void Update()
     {
+        moveDirection = MoveDirect();
         Move();
         ApplyGravity();
         RotateCamera();
+        RotateModel();
     }
   
+/*
+ --------------------------------------- MAIN FUNCTIONS ----------------------------------------------------------------------------------
+ */
 
-
-
-    //########### MAIN FUNCTIONS HERE ###################//
-    void Move()
+    Vector3 MoveDirect()
     {
         //Making movement based on camera perception
         Vector3 forward = cameraTransform.forward;
         Vector3 right = cameraTransform.right;
-        float speed;
 
         //set vertical values 0 and normalize them, this is more a preventive measurement
         forward.y = 0f;
         right.y = 0f;
         forward.Normalize();
         right.Normalize();
-        Vector3 moveDirection = forward * moveInput.y + right * moveInput.x;
+        return forward * moveInput.y + right * moveInput.x;
+    }
+
+
+    void Move()
+    {
+        float speed;
         float inputMagnitude = Mathf.Clamp01(moveInput.magnitude);
 
         //ifelse used to let keyboard users walk using shift.
@@ -97,14 +111,15 @@ public class ThirdPersonController : MonoBehaviour
         controller.Move(moveDirection * speed * Time.deltaTime); //actual moving registered
     }
 
+
     void ApplyGravity()
     {
         controller.Move(velocity * Time.deltaTime);
-        if (controller.isGrounded && velocity.y < 0)
+        if (controller.isGrounded && velocity.y < 0) //keeps player on the ground
         {
             velocity.y = -2f;
         }
-        else
+        else    //applies gravity while middair
         {
             velocity.y += gravity * Time.deltaTime;
         }
@@ -112,13 +127,13 @@ public class ThirdPersonController : MonoBehaviour
 
     void Jump()
     {
-        if (controller.isGrounded)
+        if (controller.isGrounded) //preventing user from jumping more than once
         {
             velocity.y = Mathf.Sqrt(jumpHeight * -2f * gravity);
         }
     }
 
-    //###RotateCamera function pending to change, right now it rotates the model with the camera, FIX later###//
+
     void RotateCamera()
     {
         float lookSensitivity = 120f;
@@ -133,5 +148,21 @@ public class ThirdPersonController : MonoBehaviour
 
         cameraTransform.localRotation =
             Quaternion.Euler(verticalLookRotation, 0f, 0f);
+    }
+
+
+    void RotateModel()
+    {
+        if (moveDirection.magnitude > 0.1f) //Moves only when joystick is tilted
+        {
+            Quaternion targetRotation =
+                Quaternion.LookRotation(moveDirection);
+
+            modelTransform.rotation = Quaternion.Slerp(
+                modelTransform.rotation,
+                targetRotation,
+                rotateSpeed * Time.deltaTime
+            );
+        }
     }
 }
