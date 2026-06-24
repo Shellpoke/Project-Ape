@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using UnityEngine.InputSystem;
+using UnityEngine.Rendering;
 
 [RequireComponent(typeof(CharacterController))]
 public class ThirdPersonController : MonoBehaviour
@@ -8,9 +9,10 @@ public class ThirdPersonController : MonoBehaviour
     public Transform modelTransform; //The Character Model Goes here in the editor
     public float slowSpeed = 1f;
     public float fastSpeed = 20f;
-    public float acceleration = 2f;
+    public float acceleration = 40f;
     public float rotationSpeed = 10f;
-    public float rotateSpeed = 10f;
+    public float modelRotateSpeed = 10f;
+    public float deadZone = 0.4f;
 
     [Header("Jumping")]
     public float jumpHeight = 10f;
@@ -20,14 +22,17 @@ public class ThirdPersonController : MonoBehaviour
     public Transform cameraTransform; //The Camera pivot goes here in editor
 
     //private variables
+    private bool walker;
+    private float verticalLookRotation;
+    private float speed;
     private CharacterController controller;
     private PlayerInput inputActions;
     private Vector2 moveInput;
     private Vector2 lookInput;
     private Vector3 velocity;
-    private bool walker;
-    private float verticalLookRotation;
     private Vector3 moveDirection;
+
+
 
 
     /*
@@ -67,7 +72,10 @@ public class ThirdPersonController : MonoBehaviour
 
     void Update()
     {
-        moveDirection = MoveDirect();
+        if (moveInput.magnitude > deadZone)
+        {
+            moveDirection = MoveDirect();
+        }
         Move();
         ApplyGravity();
         RotateCamera();
@@ -89,25 +97,29 @@ public class ThirdPersonController : MonoBehaviour
         right.y = 0f;
         forward.Normalize();
         right.Normalize();
-        return forward * moveInput.y + right * moveInput.x;
+        return (forward * moveInput.y + right * moveInput.x).normalized;
     }
 
 
     void Move()
     {
-        float speed;
         float inputMagnitude = Mathf.Clamp01(moveInput.magnitude);
-
+        float midSpeed;
         //ifelse used to let keyboard users walk using shift.
         if (walker)
         {
-            speed = slowSpeed;
+            midSpeed = slowSpeed;
+        }
+        else if (inputMagnitude > deadZone)
+        {
+            midSpeed = Mathf.Lerp(slowSpeed, fastSpeed, inputMagnitude); //Lerp handles the speed scaling from the joystick
         }
         else
         {
-            speed = Mathf.Lerp(slowSpeed, fastSpeed, inputMagnitude); //Lerp handles the speed scaling from the joystick
+            midSpeed = 0f;
         }
 
+        speed = Mathf.MoveTowards(speed, midSpeed, acceleration * Time.deltaTime);
         controller.Move(moveDirection * speed * Time.deltaTime); //actual moving registered
     }
 
@@ -161,7 +173,7 @@ public class ThirdPersonController : MonoBehaviour
             modelTransform.rotation = Quaternion.Slerp(
                 modelTransform.rotation,
                 targetRotation,
-                rotateSpeed * Time.deltaTime
+                modelRotateSpeed * Time.deltaTime
             );
         }
     }
