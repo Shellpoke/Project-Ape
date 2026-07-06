@@ -17,6 +17,8 @@ public class ThirdPersonController : MonoBehaviour
     [Header("Jumping")]
     public float jumpHeight = 10f;
     public float gravity = -90f;
+    public float jumpRelease = 2.5f;
+    public float coyoteTimer = 0.2f;
 
     [Header("Camera")]
     public Transform cameraTransform; //The Camera pivot goes here in editor
@@ -28,19 +30,26 @@ public class ThirdPersonController : MonoBehaviour
 
     //private variables
     private bool walker;
+    private bool jumpHold;
+    private bool jumped;
+    private bool isSpinning = false;
     private float verticalLookRotation;
     private float speed;
+    private float rotationCheck = 0f;
+    private float spinCooldownTimer = 0f;
+    private float clockoyote = 0f;
+    private int spinDirection = 0;
     private CharacterController controller;
     private PlayerInput inputActions;
     private Vector2 moveInput;
     private Vector2 lookInput;
+    private Vector2 previousStick = Vector2.zero;
     private Vector3 velocity;
     private Vector3 moveDirection;
-    private Vector2 previousStick = Vector2.zero;
-    private bool isSpinning = false;
-    private float rotationCheck = 0f;
-    private int spinDirection = 0;
-    private float spinCooldownTimer = 0f;
+
+
+
+
 
 
 
@@ -72,7 +81,16 @@ public class ThirdPersonController : MonoBehaviour
         inputActions.Player.Sprint.canceled += ctx => walker = false;
 
         //Connecting Jump press
-        inputActions.Player.Jump.performed += ctx => Jump();
+        inputActions.Player.Jump.performed += ctx =>
+        {
+            jumpHold = true;
+            Jump();
+        };
+
+        inputActions.Player.Jump.canceled += ctx =>
+        {
+            jumpHold = false;
+        };
     }
 
     void OnDisable()
@@ -82,23 +100,36 @@ public class ThirdPersonController : MonoBehaviour
 
     void Update()
     {
+        //Makes movement obey deadzones
         if (moveInput.magnitude > deadZone)
         {
             moveDirection = MoveDirect();
         }
 
+        //defines coyote time to jump
+        if (controller.isGrounded && !jumped)
+        {
+            clockoyote = coyoteTimer;
+        }
+        else
+        {
+            clockoyote -= Time.deltaTime;
+        }
         DetectSpin();
         Move();
         ApplyGravity();
         RotateCamera();
         RotateModel();
+
+        Debug.Log(clockoyote);
+        Debug.Log(jumped);
     }
 
     /*
      --------------------------------------- MAIN FUNCTIONS ----------------------------------------------------------------------------------
      */
 
-    Vector3 MoveDirect()
+    Vector3 MoveDirect() //RESPONSIBLE OF HORIZONTAL MOVEMENT
     {
         //Making movement based on camera perception
         Vector3 forward = cameraTransform.forward;
@@ -113,7 +144,7 @@ public class ThirdPersonController : MonoBehaviour
     }
 
 
-    void Move()
+    void Move() //HANDLES HORIZONTAL MOVEMENT SPEED
     {
         float inputMagnitude = Mathf.Clamp01(moveInput.magnitude);
         float midSpeed;
@@ -137,40 +168,49 @@ public class ThirdPersonController : MonoBehaviour
     }
 
 
-    void ApplyGravity()
+    void ApplyGravity() //HANDLES VERTICAL SPEED
     {
         //this resets vertical speed when a player collides with a ceiling
-        CollisionFlags flags = controller.Move(velocity * Time.deltaTime);
+        CollisionFlags flags = controller.Move(velocity * Time.deltaTime * 2f);
         if ((flags & CollisionFlags.Above) != 0 && velocity.y > 0)
         {
             velocity.y = 0f;
         }
 
-        controller.Move(velocity * Time.deltaTime);
-        if (controller.isGrounded && velocity.y < 0) //keeps player on the ground
+        //this maintains the player grounded
+        if (controller.isGrounded && velocity.y < 0)
         {
             velocity.y = -2f;
+            jumped = false;
         }
-        else    //applies gravity while middair
+
+        //this implements the cut in jumping for variable jump
+        if (velocity.y > 0f && !jumpHold)
+        {
+            velocity.y += gravity * Time.deltaTime * jumpRelease;
+        }
+        else
         {
             velocity.y += gravity * Time.deltaTime;
         }
     }
 
-    void Jump()
+    void Jump() //HANDLES CHANGES IN VERTICAL SPEED CAUSED BY JUMPING
     {
-        if (controller.isGrounded) //preventing user from jumping more than once
+        if (clockoyote > 0f) //preventing user from jumping more than once
         {
-            if (isSpinning)
+            if (isSpinning && controller.isGrounded)
             {
                 velocity.y = Mathf.Sqrt(jumpSpinHeight * -2f * gravity);
+                jumped = true;
             }
 
             else
             {
                 velocity.y = Mathf.Sqrt(jumpHeight * -2f * gravity);
+                clockoyote = 0f;
+                jumped = true;
             }
-
             //spin lock to ensure is always grounded
             isSpinning = false;
             rotationCheck = 0f;
@@ -179,41 +219,7 @@ public class ThirdPersonController : MonoBehaviour
         }
     }
 
-
-    void RotateCamera()
-    {
-        float lookSensitivity = 120f;
-
-        float mouseX = lookInput.x * lookSensitivity * Time.deltaTime;
-        float mouseY = lookInput.y * lookSensitivity * Time.deltaTime;
-
-        cameraTransform.parent.Rotate(0f, mouseX, 0f);
-
-        verticalLookRotation -= mouseY;
-        verticalLookRotation = Mathf.Clamp(verticalLookRotation, -70f, 70f);
-
-        cameraTransform.localRotation =
-            Quaternion.Euler(verticalLookRotation, 0f, 0f);
-    }
-
-
-    void RotateModel()
-    {
-        if (moveDirection.magnitude > 0.1f) //Moves only when joystick is tilted
-        {
-            Quaternion targetRotation =
-                Quaternion.LookRotation(moveDirection);
-
-            modelTransform.rotation = Quaternion.Slerp(
-                modelTransform.rotation,
-                targetRotation,
-                modelRotateSpeed * Time.deltaTime
-            );
-        }
-    }
-
-
-    void DetectSpin()
+    void DetectSpin() //DETECTS IF THE PLAYER IS ATTEMPTING TO GET INTO THE SPINNING STATE
     {
         if (controller.isGrounded)
         {
@@ -255,8 +261,6 @@ public class ThirdPersonController : MonoBehaviour
                         spinDirection = currentDirection;
                     }
                 }
-
-                //here
                 spinCooldownTimer -= Time.deltaTime;
 
                 if (spinCooldownTimer <= 0f)
@@ -270,9 +274,40 @@ public class ThirdPersonController : MonoBehaviour
                     isSpinning = true;
                 }
             }
-
             previousStick = moveInput;
-            Debug.Log(isSpinning); //ESTO ES DEBUG, QUITE ESTA LINEA SI HABLAS ESPANOL, VIVA COLOMBIA TRIPLE...
+        }
+    }
+
+
+    void RotateCamera() //RESPONSIBLE OF THE CAMERA ROTATION AROUND THE MODEL.
+    {
+        float lookSensitivity = 120f;
+
+        float mouseX = lookInput.x * lookSensitivity * Time.deltaTime;
+        float mouseY = lookInput.y * lookSensitivity * Time.deltaTime;
+
+        cameraTransform.parent.Rotate(0f, mouseX, 0f);
+
+        verticalLookRotation -= mouseY;
+        verticalLookRotation = Mathf.Clamp(verticalLookRotation, -70f, 70f);
+
+        cameraTransform.localRotation =
+            Quaternion.Euler(verticalLookRotation, 0f, 0f);
+    }
+
+
+    void RotateModel() //RESPONSIBLE OF ROTATING THE MODEL ACCORDING TO THE DIRECTION THE PLAYER IS MOVING
+    {
+        if (moveDirection.magnitude > 0.1f) //Moves only when joystick is tilted
+        {
+            Quaternion targetRotation =
+                Quaternion.LookRotation(moveDirection);
+
+            modelTransform.rotation = Quaternion.Slerp(
+                modelTransform.rotation,
+                targetRotation,
+                modelRotateSpeed * Time.deltaTime
+            );
         }
     }
 }

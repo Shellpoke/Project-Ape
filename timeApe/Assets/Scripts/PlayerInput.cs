@@ -165,6 +165,17 @@ public partial class @PlayerInput: IInputActionCollection2, IDisposable
                 },
                 {
                     ""name"": """",
+                    ""id"": ""39213f47-0def-49cc-af2d-325a2f44ae1f"",
+                    ""path"": ""<Gamepad>/buttonEast"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Jump"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
                     ""id"": ""e571fb10-d4dd-4944-815a-2647a1eeb208"",
                     ""path"": ""<Keyboard>/space"",
                     ""interactions"": """",
