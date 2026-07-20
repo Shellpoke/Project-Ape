@@ -49,7 +49,13 @@ public class ThirdPersonController : MonoBehaviour
 
 
 
+    public float skidDuration = 0.2f;
+    public float skidDeceleration = 30f;
 
+    bool isSkidding;
+    float skidTimer;
+
+    Vector3 lastMoveDirection;
 
 
 
@@ -149,6 +155,11 @@ public class ThirdPersonController : MonoBehaviour
         float inputMagnitude = Mathf.Clamp01(moveInput.magnitude);
         float midSpeed;
         //ifelse used to let keyboard users walk using shift.
+        if (!controller.isGrounded)
+        {
+            isSkidding = false;
+        }
+
         if (walker || isSpinning)
         {
             midSpeed = slowSpeed;
@@ -162,9 +173,37 @@ public class ThirdPersonController : MonoBehaviour
         {
             midSpeed = 0f;
         }
+        if (!isSkidding && speed > 2f && moveDirection.sqrMagnitude > 0.01f && lastMoveDirection.sqrMagnitude > 0.01f)
+        {
+            float dot = Vector3.Dot(lastMoveDirection, moveDirection);
 
+            if (dot < -0.7f)
+            {
+                isSkidding = true;
+                skidTimer = skidDuration;
+            }
+        }
+
+        if (isSkidding)
+        {
+            skidTimer -= Time.deltaTime;
+
+            speed = Mathf.MoveTowards(speed, 0f, skidDeceleration * Time.deltaTime);
+
+            controller.Move(lastMoveDirection * speed * Time.deltaTime);
+
+            if (skidTimer <= 0f)
+                isSkidding = false;
+
+            return;
+        }
         speed = Mathf.MoveTowards(speed, midSpeed, acceleration * Time.deltaTime);
         controller.Move(moveDirection * speed * Time.deltaTime); //actual moving registered
+
+        if (speed > 0.1f && moveDirection.sqrMagnitude > 0.01f)
+        {
+            lastMoveDirection = moveDirection;
+        }
     }
 
 
@@ -204,6 +243,8 @@ public class ThirdPersonController : MonoBehaviour
                 velocity.y = Mathf.Sqrt(jumpSpinHeight * -2f * gravity);
                 jumped = true;
             }
+
+
 
             else
             {
