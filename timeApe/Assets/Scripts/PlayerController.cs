@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using Unity.VisualScripting;
+using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.Rendering;
 
@@ -13,12 +14,15 @@ public class ThirdPersonController : MonoBehaviour
     public float rotationSpeed = 10f;
     public float modelRotateSpeed = 10f;
     public float deadZone = 0.4f;
+    public float blockedTimer = 1f;
 
     [Header("Jumping")]
     public float jumpHeight = 10f;
     public float gravity = -90f;
     public float jumpRelease = 2.5f;
     public float coyoteTimer = 0.2f;
+    public float backflipSpeed = 10f;
+    public float backflipHeight = 10f;
 
     [Header("Camera")]
     public Transform cameraTransform; //The Camera pivot goes here in editor
@@ -52,11 +56,17 @@ public class ThirdPersonController : MonoBehaviour
     public float skidDuration = 0.2f;
     public float skidDeceleration = 30f;
 
-    bool isSkidding;
-    float skidTimer;
+    private bool isSkidding;
+    private float skidTimer;
 
-    Vector3 lastMoveDirection;
+    private Vector3 lastMoveDirection;
 
+
+
+    private bool isBackflipping;
+    private bool movementBlocked;
+    private float movementBlockTimer;
+    private Vector3 launchDirection;
 
 
 
@@ -106,6 +116,9 @@ public class ThirdPersonController : MonoBehaviour
 
     void Update()
     {
+        RotateCamera();
+        RotateModel();
+
         //Makes movement obey deadzones
         if (moveInput.magnitude > deadZone)
         {
@@ -121,14 +134,18 @@ public class ThirdPersonController : MonoBehaviour
         {
             clockoyote -= Time.deltaTime;
         }
-        DetectSpin();
-        Move();
-        ApplyGravity();
-        RotateCamera();
-        RotateModel();
 
-        Debug.Log(clockoyote);
-        Debug.Log(jumped);
+        ApplyGravity();
+        DetectSpin();
+
+        if (movementBlocked) //if the boolean is not on, allow player to move by ignoring this function
+        {
+            MoveanBlock();
+        }
+        else // if there is no blockage move as usual
+        {
+            Move();
+        }    
     }
 
     /*
@@ -137,10 +154,14 @@ public class ThirdPersonController : MonoBehaviour
 
     Vector3 MoveDirect() //RESPONSIBLE OF HORIZONTAL MOVEMENT
     {
+        if (isBackflipping) //ignore user's joystick direction while backflipping
+        {
+            return launchDirection;
+        }
+
         //Making movement based on camera perception
         Vector3 forward = cameraTransform.forward;
-        Vector3 right = cameraTransform.right;
-
+        Vector3 right = cameraTransform.right;    
         //set vertical values 0 and normalize them, this is more a preventive measurement
         forward.y = 0f;
         right.y = 0f;
@@ -173,7 +194,8 @@ public class ThirdPersonController : MonoBehaviour
         {
             midSpeed = 0f;
         }
-        if (!isSkidding && speed > 2f && moveDirection.sqrMagnitude > 0.01f && lastMoveDirection.sqrMagnitude > 0.01f)
+
+        if (!isSkidding && speed > 2f && moveDirection.sqrMagnitude > 0.01f && lastMoveDirection.sqrMagnitude > 0.01f) //skidcheck
         {
             float dot = Vector3.Dot(lastMoveDirection, moveDirection);
 
@@ -184,7 +206,7 @@ public class ThirdPersonController : MonoBehaviour
             }
         }
 
-        if (isSkidding)
+        if (isSkidding) //when the skid state starts, run down the timer, perform the skid and leave the skid state once the timer has passed
         {
             skidTimer -= Time.deltaTime;
 
@@ -194,13 +216,13 @@ public class ThirdPersonController : MonoBehaviour
 
             if (skidTimer <= 0f)
                 isSkidding = false;
-
             return;
         }
+
         speed = Mathf.MoveTowards(speed, midSpeed, acceleration * Time.deltaTime);
         controller.Move(moveDirection * speed * Time.deltaTime); //actual moving registered
 
-        if (speed > 0.1f && moveDirection.sqrMagnitude > 0.01f)
+        if (speed > 0.1f && moveDirection.sqrMagnitude > 0.1f) //detection of the direction
         {
             lastMoveDirection = moveDirection;
         }
@@ -214,6 +236,7 @@ public class ThirdPersonController : MonoBehaviour
         if ((flags & CollisionFlags.Above) != 0 && velocity.y > 0)
         {
             velocity.y = 0f;
+            movementBlockTimer = 0f; //interrupts special jumps if a wall is hit
         }
 
         //this maintains the player grounded
@@ -244,14 +267,21 @@ public class ThirdPersonController : MonoBehaviour
                 jumped = true;
             }
 
-
-
             else
             {
                 velocity.y = Mathf.Sqrt(jumpHeight * -2f * gravity);
                 clockoyote = 0f;
                 jumped = true;
             }
+
+            if (isSkidding) //gets the player of the skid state to enter the backflip state
+            {
+                isSkidding = false;
+                speed = 0f;
+                StartBackflip();
+
+            }
+
             //spin lock to ensure is always grounded
             isSpinning = false;
             rotationCheck = 0f;
@@ -339,16 +369,50 @@ public class ThirdPersonController : MonoBehaviour
 
     void RotateModel() //RESPONSIBLE OF ROTATING THE MODEL ACCORDING TO THE DIRECTION THE PLAYER IS MOVING
     {
-        if (moveDirection.magnitude > 0.1f) //Moves only when joystick is tilted
+        if (moveDirection.magnitude > 0.1f && !isBackflipping) //Moves only when joystick is tilted OR blocks when the player is doing a backflip
         {
-            Quaternion targetRotation =
-                Quaternion.LookRotation(moveDirection);
+            Quaternion targetRotation = Quaternion.LookRotation(moveDirection);
 
-            modelTransform.rotation = Quaternion.Slerp(
-                modelTransform.rotation,
-                targetRotation,
-                modelRotateSpeed * Time.deltaTime
-            );
+            modelTransform.rotation = Quaternion.Slerp(modelTransform.rotation, targetRotation, modelRotateSpeed * Time.deltaTime);
+        }
+    }
+
+    void StartBackflip() //RESPONSIBLE OF THE BACKFLIP MECHANIC
+    {
+        //prevents extra movements and extra jumps during the backflip
+        jumped = true;
+        clockoyote = 0f;
+        launchDirection = MoveDirect();
+
+        //begins block movement and sets the timer
+        movementBlocked = true;
+        isBackflipping = true;
+        movementBlockTimer = blockedTimer;
+
+        //sets direction and height for the backflip.
+        velocity.x = launchDirection.x * backflipSpeed;
+        velocity.y = Mathf.Sqrt(backflipHeight * -2f * gravity);
+        velocity.z = launchDirection.z * backflipSpeed;
+    }
+
+    void MoveanBlock() //RESPONSIBLE OF BLOCKING USER MOVEMENT WHEN PERFORMING CERTAIN TYPES OF JUMPS
+    {
+
+        movementBlockTimer -= Time.deltaTime; //start the blocked movement period
+        
+        //then reset everything once the time is up or if the player prematurely gets on a platform
+        if (movementBlockTimer <= 0f || controller.isGrounded)
+        {
+            movementBlocked = false;
+
+            if (isBackflipping)
+            {
+                isBackflipping = false;
+                velocity.x = 0f;
+                velocity.z = 0f;
+                launchDirection = Vector3.zero;
+            }
+
         }
     }
 }
