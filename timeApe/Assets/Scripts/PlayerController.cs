@@ -126,7 +126,7 @@ public class ThirdPersonController : MonoBehaviour
         }
 
         //defines coyote time to jump
-        if (controller.isGrounded && !jumped)
+        if (controller.isGrounded || !jumped)
         {
             clockoyote = coyoteTimer;
         }
@@ -145,7 +145,8 @@ public class ThirdPersonController : MonoBehaviour
         else // if there is no blockage move as usual
         {
             Move();
-        }    
+        }
+        Debug.Log(clockoyote);
     }
 
     /*
