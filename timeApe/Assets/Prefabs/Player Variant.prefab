@@ -69,6 +69,10 @@ PrefabInstance:
       value: 50
       objectReference: {fileID: 0}
     - target: {fileID: 8431170679897149040, guid: a94efac50ffe3c247aa1c14b4d8bebc1, type: 3}
+      propertyPath: backflipSpeed
+      value: 5
+      objectReference: {fileID: 0}
+    - target: {fileID: 8431170679897149040, guid: a94efac50ffe3c247aa1c14b4d8bebc1, type: 3}
       propertyPath: rotationSpeed
       value: 15
       objectReference: {fileID: 0}
