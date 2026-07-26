@@ -57,20 +57,40 @@ PrefabInstance:
       value: Player Variant
       objectReference: {fileID: 0}
     - target: {fileID: 8431170679897149040, guid: a94efac50ffe3c247aa1c14b4d8bebc1, type: 3}
+      propertyPath: gravity
+      value: -50
+      objectReference: {fileID: 0}
+    - target: {fileID: 8431170679897149040, guid: a94efac50ffe3c247aa1c14b4d8bebc1, type: 3}
       propertyPath: deadZone
       value: 0.3
       objectReference: {fileID: 0}
     - target: {fileID: 8431170679897149040, guid: a94efac50ffe3c247aa1c14b4d8bebc1, type: 3}
+      propertyPath: fastSpeed
+      value: 15
+      objectReference: {fileID: 0}
+    - target: {fileID: 8431170679897149040, guid: a94efac50ffe3c247aa1c14b4d8bebc1, type: 3}
       propertyPath: jumpHeight
-      value: 2
+      value: 2.5
       objectReference: {fileID: 0}
     - target: {fileID: 8431170679897149040, guid: a94efac50ffe3c247aa1c14b4d8bebc1, type: 3}
       propertyPath: acceleration
-      value: 50
+      value: 100
+      objectReference: {fileID: 0}
+    - target: {fileID: 8431170679897149040, guid: a94efac50ffe3c247aa1c14b4d8bebc1, type: 3}
+      propertyPath: skidDuration
+      value: 0.05
+      objectReference: {fileID: 0}
+    - target: {fileID: 8431170679897149040, guid: a94efac50ffe3c247aa1c14b4d8bebc1, type: 3}
+      propertyPath: backflipSpeed
+      value: 4
       objectReference: {fileID: 0}
     - target: {fileID: 8431170679897149040, guid: a94efac50ffe3c247aa1c14b4d8bebc1, type: 3}
       propertyPath: rotationSpeed
       value: 15
+      objectReference: {fileID: 0}
+    - target: {fileID: 8431170679897149040, guid: a94efac50ffe3c247aa1c14b4d8bebc1, type: 3}
+      propertyPath: backflipHeight
+      value: 4
       objectReference: {fileID: 0}
     - target: {fileID: 8431170679897149040, guid: a94efac50ffe3c247aa1c14b4d8bebc1, type: 3}
       propertyPath: jumpSpinHeight
@@ -90,11 +110,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8799879337905959382, guid: a94efac50ffe3c247aa1c14b4d8bebc1, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 2.6
+      value: 3.55
       objectReference: {fileID: 0}
     - target: {fileID: 8799879337905959382, guid: a94efac50ffe3c247aa1c14b4d8bebc1, type: 3}
       propertyPath: m_LocalPosition.z
-      value: -5.33
+      value: -6.3
       objectReference: {fileID: 0}
     - target: {fileID: 8799879337905959382, guid: a94efac50ffe3c247aa1c14b4d8bebc1, type: 3}
       propertyPath: m_LocalRotation.w
