@@ -15,6 +15,7 @@ public class ThirdPersonController : MonoBehaviour
     public float modelRotateSpeed = 10f;
     public float deadZone = 0.4f;
     public float blockedTimer = 1f;
+    public float skidTolerance = -0.7f;
 
     [Header("Jumping")]
     public float jumpHeight = 10f;
@@ -200,7 +201,7 @@ public class ThirdPersonController : MonoBehaviour
         {
             float dot = Vector3.Dot(lastMoveDirection, moveDirection);
 
-            if (dot < -0.7f)
+            if (dot < skidTolerance)
             {
                 isSkidding = true;
                 skidTimer = skidDuration;
