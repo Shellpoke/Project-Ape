@@ -1404,17 +1404,21 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 786115944955146380, guid: a94efac50ffe3c247aa1c14b4d8bebc1, type: 3}
+      propertyPath: m_Radius
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 4487558115815528367, guid: a94efac50ffe3c247aa1c14b4d8bebc1, type: 3}
       propertyPath: m_LocalPosition.x
-      value: -4
+      value: 587.5
       objectReference: {fileID: 0}
     - target: {fileID: 4487558115815528367, guid: a94efac50ffe3c247aa1c14b4d8bebc1, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 1.05
+      value: 4.3
       objectReference: {fileID: 0}
     - target: {fileID: 4487558115815528367, guid: a94efac50ffe3c247aa1c14b4d8bebc1, type: 3}
       propertyPath: m_LocalPosition.z
-      value: 0
+      value: -2409
       objectReference: {fileID: 0}
     - target: {fileID: 4487558115815528367, guid: a94efac50ffe3c247aa1c14b4d8bebc1, type: 3}
       propertyPath: m_LocalRotation.w
@@ -1454,7 +1458,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8431170679897149040, guid: a94efac50ffe3c247aa1c14b4d8bebc1, type: 3}
       propertyPath: backflipHeight
-      value: 10
+      value: 5
       objectReference: {fileID: 0}
     - target: {fileID: 8431170679897149040, guid: a94efac50ffe3c247aa1c14b4d8bebc1, type: 3}
       propertyPath: modelTransform
