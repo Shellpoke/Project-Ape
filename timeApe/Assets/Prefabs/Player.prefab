@@ -1410,15 +1410,15 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4487558115815528367, guid: a94efac50ffe3c247aa1c14b4d8bebc1, type: 3}
       propertyPath: m_LocalPosition.x
-      value: 587.5
+      value: 32.6
       objectReference: {fileID: 0}
     - target: {fileID: 4487558115815528367, guid: a94efac50ffe3c247aa1c14b4d8bebc1, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 4.3
+      value: 166.6
       objectReference: {fileID: 0}
     - target: {fileID: 4487558115815528367, guid: a94efac50ffe3c247aa1c14b4d8bebc1, type: 3}
       propertyPath: m_LocalPosition.z
-      value: -2409
+      value: 139.52
       objectReference: {fileID: 0}
     - target: {fileID: 4487558115815528367, guid: a94efac50ffe3c247aa1c14b4d8bebc1, type: 3}
       propertyPath: m_LocalRotation.w
@@ -1456,6 +1456,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Player
       objectReference: {fileID: 0}
+    - target: {fileID: 6853331880315779826, guid: a94efac50ffe3c247aa1c14b4d8bebc1, type: 3}
+      propertyPath: m_TagString
+      value: Player
+      objectReference: {fileID: 0}
     - target: {fileID: 8431170679897149040, guid: a94efac50ffe3c247aa1c14b4d8bebc1, type: 3}
       propertyPath: backflipHeight
       value: 5
@@ -1465,8 +1469,16 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 9024033431116226236}
     - target: {fileID: 8431170679897149040, guid: a94efac50ffe3c247aa1c14b4d8bebc1, type: 3}
+      propertyPath: spinAngleTrigger
+      value: 360
+      objectReference: {fileID: 0}
+    - target: {fileID: 8431170679897149040, guid: a94efac50ffe3c247aa1c14b4d8bebc1, type: 3}
       propertyPath: wallJumpVertical
       value: 10
+      objectReference: {fileID: 0}
+    - target: {fileID: 8431170679897149040, guid: a94efac50ffe3c247aa1c14b4d8bebc1, type: 3}
+      propertyPath: wallCheckDistance
+      value: 1.2
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
