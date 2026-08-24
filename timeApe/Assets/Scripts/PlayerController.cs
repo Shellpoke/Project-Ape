@@ -181,6 +181,7 @@ public class ThirdPersonController : MonoBehaviour
             CheckWall();
         }
 
+        Debug.Log(isSpinning);
         DetectSpin();
     }
 
@@ -329,7 +330,7 @@ public class ThirdPersonController : MonoBehaviour
         {
 
             //SPIN JUMP (only in ground and needs to be spinning)
-            if (isSpinning && controller.isGrounded)
+            if (isSpinning)
             {
                 velocity.y = Mathf.Sqrt(jumpSpinHeight * -2f * gravity);
                 jumped = true;
@@ -381,34 +382,42 @@ public class ThirdPersonController : MonoBehaviour
 
                 if (Mathf.Abs(angleDelta) > 2f)
                 {
-                    spinCooldownTimer = spinTimeout;
                     int currentDirection = angleDelta > 0 ? 1 : -1;
 
                     if (spinDirection == 0) //detects beginning of spin
                     {
                         spinDirection = currentDirection;
+                        rotationCheck = 0f;
+                        spinCooldownTimer = spinTimeout;
+                    }
+                    
+                    if (currentDirection != spinDirection) // Changed direction: restart the spin attempt
+                    {
+                        spinDirection = currentDirection;
+                        rotationCheck = 0f;
+                        spinCooldownTimer = spinTimeout;
                     }
 
-                    if (currentDirection == spinDirection) //checks if the joystick goes to the same direction, if it does, add to the spin charge
+                    rotationCheck += Mathf.Abs(angleDelta);
+
+                    if (rotationCheck >= spinAngleTrigger) // Continue accumulating rotation
                     {
-                        rotationCheck += Mathf.Abs(angleDelta);
-                    }
-                    else //if not reset the charge
-                    {
+                        isSpinning = true;
                         rotationCheck = 0f;
-                        spinDirection = currentDirection;
+                        spinDirection = 0;
                     }
                 }
+            }
+            if (spinDirection != 0)
+            {
                 spinCooldownTimer -= Time.deltaTime;
 
-                if (spinCooldownTimer <= 0f) //will not trigger the spin if the spin action is too slow, prvents it from triggering during a normal turn
+                if (spinCooldownTimer <= 0f)
                 {
+                    previousStick = Vector2.zero;
+                    rotationCheck = 0f;
+                    spinDirection = 0;
                     isSpinning = false;
-                }
-
-                if ((rotationCheck) >= spinAngleTrigger)
-                {
-                    isSpinning = true;
                 }
             }
             previousStick = moveInput;
