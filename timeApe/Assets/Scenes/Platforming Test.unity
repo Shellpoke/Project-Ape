@@ -36742,6 +36742,25 @@ Mesh:
       - serializedVersion: 1
         m_IndexStart: 0
         m_IndexCount: 0
+--- !u!1 &95831524 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 1936230099883026936, guid: 1f1709056ffa52a4e8e7047b2eb430c3, type: 3}
+  m_PrefabInstance: {fileID: 883636331}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &95831526
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 95831524}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 86c6556701af9e04380698b89f691b6e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: FMODUnity::FMODUnity.StudioListener
+  nonRigidbodyVelocity: 0
+  attenuationObject: {fileID: 0}
 --- !u!1 &109043990
 GameObject:
   m_ObjectHideFlags: 0
@@ -209329,10 +209348,14 @@ PrefabInstance:
       propertyPath: m_Height
       value: 2.35
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: 0}
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 1936230099883026936, guid: 1f1709056ffa52a4e8e7047b2eb430c3, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 95831526}
   m_SourcePrefab: {fileID: 100100000, guid: 1f1709056ffa52a4e8e7047b2eb430c3, type: 3}
 --- !u!1 &884342489
 GameObject:
