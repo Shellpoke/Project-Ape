@@ -1486,8 +1486,30 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 4487558115815528367, guid: a94efac50ffe3c247aa1c14b4d8bebc1, type: 3}
       insertIndex: 0
       addedObject: {fileID: 9024033431116226236}
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 7159577615910513288, guid: a94efac50ffe3c247aa1c14b4d8bebc1, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 2374892875268983580}
   m_SourcePrefab: {fileID: 100100000, guid: a94efac50ffe3c247aa1c14b4d8bebc1, type: 3}
+--- !u!1 &1936230099883026936 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 7159577615910513288, guid: a94efac50ffe3c247aa1c14b4d8bebc1, type: 3}
+  m_PrefabInstance: {fileID: 8756461043726500720}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &2374892875268983580
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1936230099883026936}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 86c6556701af9e04380698b89f691b6e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: FMODUnity::FMODUnity.StudioListener
+  nonRigidbodyVelocity: 0
+  attenuationObject: {fileID: 0}
 --- !u!4 &5170748891066684639 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 4487558115815528367, guid: a94efac50ffe3c247aa1c14b4d8bebc1, type: 3}

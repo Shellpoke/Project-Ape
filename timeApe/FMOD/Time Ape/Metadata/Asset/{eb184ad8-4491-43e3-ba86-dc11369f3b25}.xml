@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<objects serializationModel="Studio.02.03.00">
+	<object class="EncodableAsset" id="{eb184ad8-4491-43e3-ba86-dc11369f3b25}">
+		<property name="assetPath">
+			<value>Time Ape Footsteps/</value>
+		</property>
+		<relationship name="masterAssetFolder">
+			<destination>{d143743f-a378-443c-af89-79086c4c8730}</destination>
+		</relationship>
+	</object>
+</objects>
