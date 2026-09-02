@@ -1461,6 +1461,22 @@ PrefabInstance:
       value: Player
       objectReference: {fileID: 0}
     - target: {fileID: 8431170679897149040, guid: a94efac50ffe3c247aa1c14b4d8bebc1, type: 3}
+      propertyPath: Player
+      value: 
+      objectReference: {fileID: 2782907790892054914}
+    - target: {fileID: 8431170679897149040, guid: a94efac50ffe3c247aa1c14b4d8bebc1, type: 3}
+      propertyPath: JumpEvent.Path
+      value: event:/Jump
+      objectReference: {fileID: 0}
+    - target: {fileID: 8431170679897149040, guid: a94efac50ffe3c247aa1c14b4d8bebc1, type: 3}
+      propertyPath: SkidEvent.Path
+      value: event:/Skid
+      objectReference: {fileID: 0}
+    - target: {fileID: 8431170679897149040, guid: a94efac50ffe3c247aa1c14b4d8bebc1, type: 3}
+      propertyPath: SpinEvent.Path
+      value: event:/Spin
+      objectReference: {fileID: 0}
+    - target: {fileID: 8431170679897149040, guid: a94efac50ffe3c247aa1c14b4d8bebc1, type: 3}
       propertyPath: backflipHeight
       value: 5
       objectReference: {fileID: 0}
@@ -1479,6 +1495,74 @@ PrefabInstance:
     - target: {fileID: 8431170679897149040, guid: a94efac50ffe3c247aa1c14b4d8bebc1, type: 3}
       propertyPath: wallCheckDistance
       value: 1.2
+      objectReference: {fileID: 0}
+    - target: {fileID: 8431170679897149040, guid: a94efac50ffe3c247aa1c14b4d8bebc1, type: 3}
+      propertyPath: FootstepEvent.Path
+      value: event:/Footsteps
+      objectReference: {fileID: 0}
+    - target: {fileID: 8431170679897149040, guid: a94efac50ffe3c247aa1c14b4d8bebc1, type: 3}
+      propertyPath: JumpEvent.Guid.Data1
+      value: -19855553
+      objectReference: {fileID: 0}
+    - target: {fileID: 8431170679897149040, guid: a94efac50ffe3c247aa1c14b4d8bebc1, type: 3}
+      propertyPath: JumpEvent.Guid.Data2
+      value: 1192498274
+      objectReference: {fileID: 0}
+    - target: {fileID: 8431170679897149040, guid: a94efac50ffe3c247aa1c14b4d8bebc1, type: 3}
+      propertyPath: JumpEvent.Guid.Data3
+      value: 1318516132
+      objectReference: {fileID: 0}
+    - target: {fileID: 8431170679897149040, guid: a94efac50ffe3c247aa1c14b4d8bebc1, type: 3}
+      propertyPath: JumpEvent.Guid.Data4
+      value: -2041523303
+      objectReference: {fileID: 0}
+    - target: {fileID: 8431170679897149040, guid: a94efac50ffe3c247aa1c14b4d8bebc1, type: 3}
+      propertyPath: SkidEvent.Guid.Data1
+      value: 59437839
+      objectReference: {fileID: 0}
+    - target: {fileID: 8431170679897149040, guid: a94efac50ffe3c247aa1c14b4d8bebc1, type: 3}
+      propertyPath: SkidEvent.Guid.Data2
+      value: 1118401335
+      objectReference: {fileID: 0}
+    - target: {fileID: 8431170679897149040, guid: a94efac50ffe3c247aa1c14b4d8bebc1, type: 3}
+      propertyPath: SkidEvent.Guid.Data3
+      value: 541689473
+      objectReference: {fileID: 0}
+    - target: {fileID: 8431170679897149040, guid: a94efac50ffe3c247aa1c14b4d8bebc1, type: 3}
+      propertyPath: SkidEvent.Guid.Data4
+      value: 732998442
+      objectReference: {fileID: 0}
+    - target: {fileID: 8431170679897149040, guid: a94efac50ffe3c247aa1c14b4d8bebc1, type: 3}
+      propertyPath: SpinEvent.Guid.Data1
+      value: -2037438526
+      objectReference: {fileID: 0}
+    - target: {fileID: 8431170679897149040, guid: a94efac50ffe3c247aa1c14b4d8bebc1, type: 3}
+      propertyPath: SpinEvent.Guid.Data2
+      value: 1137907855
+      objectReference: {fileID: 0}
+    - target: {fileID: 8431170679897149040, guid: a94efac50ffe3c247aa1c14b4d8bebc1, type: 3}
+      propertyPath: SpinEvent.Guid.Data3
+      value: 2105490869
+      objectReference: {fileID: 0}
+    - target: {fileID: 8431170679897149040, guid: a94efac50ffe3c247aa1c14b4d8bebc1, type: 3}
+      propertyPath: SpinEvent.Guid.Data4
+      value: -1321954566
+      objectReference: {fileID: 0}
+    - target: {fileID: 8431170679897149040, guid: a94efac50ffe3c247aa1c14b4d8bebc1, type: 3}
+      propertyPath: FootstepEvent.Guid.Data1
+      value: -1210842539
+      objectReference: {fileID: 0}
+    - target: {fileID: 8431170679897149040, guid: a94efac50ffe3c247aa1c14b4d8bebc1, type: 3}
+      propertyPath: FootstepEvent.Guid.Data2
+      value: 1256570919
+      objectReference: {fileID: 0}
+    - target: {fileID: 8431170679897149040, guid: a94efac50ffe3c247aa1c14b4d8bebc1, type: 3}
+      propertyPath: FootstepEvent.Guid.Data3
+      value: -1348499071
+      objectReference: {fileID: 0}
+    - target: {fileID: 8431170679897149040, guid: a94efac50ffe3c247aa1c14b4d8bebc1, type: 3}
+      propertyPath: FootstepEvent.Guid.Data4
+      value: -540598375
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -1510,6 +1594,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: FMODUnity::FMODUnity.StudioListener
   nonRigidbodyVelocity: 0
   attenuationObject: {fileID: 0}
+--- !u!1 &2782907790892054914 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 6853331880315779826, guid: a94efac50ffe3c247aa1c14b4d8bebc1, type: 3}
+  m_PrefabInstance: {fileID: 8756461043726500720}
+  m_PrefabAsset: {fileID: 0}
 --- !u!4 &5170748891066684639 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 4487558115815528367, guid: a94efac50ffe3c247aa1c14b4d8bebc1, type: 3}

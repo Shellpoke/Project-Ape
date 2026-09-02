@@ -2,6 +2,7 @@
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.Rendering;
+using FMODUnity;
 
 [RequireComponent(typeof(CharacterController))]
 public class ThirdPersonController : MonoBehaviour
@@ -42,7 +43,24 @@ public class ThirdPersonController : MonoBehaviour
     public float jumpSpinHeight = 20f;
     public float spinAngleTrigger = 720f;
     public float spinTimeout = 0.20f;
-    
+
+    [Header("Audio Stuff")]
+    public GameObject Player;
+    [SerializeField] EventReference FootstepEvent;
+    public float FootstepRate = .4f;
+    private float StepTime = 0f;
+
+
+    [SerializeField] EventReference JumpEvent;
+
+
+    [SerializeField] EventReference SpinEvent;
+    public float SpinRate = .6f;
+    private float SpinTime = 0f;
+
+    [SerializeField] EventReference SkidEvent;
+    private float skidTime = 0f;
+
 
     //private variables
     private bool isSkidding;
@@ -55,6 +73,9 @@ public class ThirdPersonController : MonoBehaviour
     private bool isTouchingWall;
     private bool isWallJumping;
     private bool isNearGround;
+    private bool isWalking;
+    private bool jumpAudioCheck;
+    private bool spinAudioCheck;
 
     private float verticalLookRotation;
     private float speed;
@@ -84,11 +105,11 @@ public class ThirdPersonController : MonoBehaviour
 
 
 
-    
 
-    
-    
-    
+
+
+
+
 
 
 
@@ -142,6 +163,7 @@ public class ThirdPersonController : MonoBehaviour
     {
         RotateCamera();
         RotateModel();
+        AudioChecks();
 
         //Makes movement obey deadzones
         if (moveInput.magnitude > deadZone)
@@ -194,7 +216,7 @@ public class ThirdPersonController : MonoBehaviour
 
 
 
-    
+
 
     /*
      --------------------------------------- MAIN FUNCTIONS ----------------------------------------------------------------------------------
@@ -209,7 +231,7 @@ public class ThirdPersonController : MonoBehaviour
 
         //Making movement based on camera perception
         Vector3 forward = cameraTransform.forward;
-        Vector3 right = cameraTransform.right;    
+        Vector3 right = cameraTransform.right;
         //set vertical values 0 and normalize them, this is more a preventive measurement
         forward.y = 0f;
         right.y = 0f;
@@ -272,7 +294,12 @@ public class ThirdPersonController : MonoBehaviour
 
         if (speed > 0.1f && moveDirection.sqrMagnitude > 0.1f) //detection of the direction
         {
+            isWalking = true;
             lastMoveDirection = moveDirection;
+        }
+        else
+        {
+            isWalking = false;
         }
     }
 
@@ -314,6 +341,7 @@ public class ThirdPersonController : MonoBehaviour
         if (isTouchingWall && jumped && !isNearGround)
         {
             jumped = true;
+            jumpAudioCheck = true;
             clockoyote = 0f;
 
             movementBlocked = true;
@@ -333,6 +361,7 @@ public class ThirdPersonController : MonoBehaviour
             {
                 velocity.y = Mathf.Sqrt(jumpSpinHeight * -2f * gravity);
                 jumped = true;
+                jumpAudioCheck = true;
             }
 
             //BASE JUMP
@@ -341,6 +370,7 @@ public class ThirdPersonController : MonoBehaviour
                 velocity.y = Mathf.Sqrt(jumpHeight * -2f * gravity);
                 clockoyote = 0f;
                 jumped = true;
+                jumpAudioCheck = true;
             }
 
             //BACKFLIP (needs to be in skid state)
@@ -349,6 +379,7 @@ public class ThirdPersonController : MonoBehaviour
                 isSkidding = false;
                 speed = 0f;
                 Backflip();
+                jumpAudioCheck = true;
 
             }
 
@@ -466,7 +497,7 @@ public class ThirdPersonController : MonoBehaviour
     {
 
         movementBlockTimer -= Time.deltaTime; //start the blocked movement period
-        
+
         //then reset everything once the time is up or if the player prematurely gets on a platform
         if (movementBlockTimer <= 0f || controller.isGrounded)
         {
@@ -507,5 +538,79 @@ public class ThirdPersonController : MonoBehaviour
             isTouchingWall = true;
             launchDirection = hit.normal;
         }
+    }
+
+
+    /*
+         --------------------------------------- AUDIO FUNCTIONS ----------------------------------------------------------------------------------
+         */
+    void AudioChecks() //contains all the checks for movement sounds
+    {
+        StepTime += Time.deltaTime;
+        SpinTime += Time.deltaTime;
+        skidTime += Time.deltaTime;
+
+        //footsteps sound
+
+        if (isWalking && isNearGround && !isSkidding && !isSpinning && !jumped && !isBackflipping)
+        {
+            if (StepTime >= FootstepRate)
+            {
+                FootstepsSound();
+                StepTime = 0f;
+            }
+        }
+
+        //jump sound
+
+        if (jumpAudioCheck && jumped)
+        {
+            JumpSound();
+            jumpAudioCheck = false;
+
+        }
+
+        //spinning sound
+
+        if (isSpinning && isWalking)
+        {
+            if (SpinTime >= SpinRate)
+            {
+                SpinSound();
+                SpinTime = 0f;
+            }
+        }
+
+        //skid sound
+
+        if (isSkidding)
+        {
+            if(skidTime >= skidDuration)
+            {
+                Debug.Log("hi");
+                SkidSound();
+                skidTime = 0f;
+            }
+        }
+    }
+
+    void FootstepsSound()
+    {
+        RuntimeManager.PlayOneShotAttached(FootstepEvent, Player);
+    }
+
+    void JumpSound()
+    {
+        RuntimeManager.PlayOneShotAttached(JumpEvent, Player);
+    }
+
+    void SpinSound()
+    {
+        RuntimeManager.PlayOneShotAttached(SpinEvent, Player);
+    }
+
+    void SkidSound()
+    {
+        RuntimeManager.PlayOneShotAttached(SkidEvent, Player);
     }
 }

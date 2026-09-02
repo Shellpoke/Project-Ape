@@ -60,7 +60,7 @@ MonoBehaviour:
   Path: FMOD/Desktop/Master.bank
   Name: Master
   StudioPath: bank:/Master
-  lastModified: 639238932773348677
+  lastModified: 639239001621669465
   FileSizes: []
   Exists: 1
 --- !u!114 &-3514624063930182634
@@ -78,11 +78,38 @@ MonoBehaviour:
   Path: FMOD/Desktop/Master.strings.bank
   Name: Master.strings
   StudioPath: bank:/Master.strings
-  lastModified: 639238932773368682
+  lastModified: 639239001621669465
   FileSizes:
   - Name: 
-    Value: 770
+    Value: 898
   Exists: 1
+--- !u!114 &-2229986527137261142
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ceb653cd98e289a4e8697a1af55201f2, type: 3}
+  m_Name: event:/Skid
+  m_EditorClassIdentifier: FMODUnityEditor::FMODUnity.EditorEventRef
+  Path: event:/Skid
+  Guid:
+    Data1: 59437839
+    Data2: 1118401335
+    Data3: 541689473
+    Data4: 732998442
+  Banks:
+  - {fileID: -4383538444673263487}
+  IsStream: 0
+  Is3D: 0
+  IsOneShot: 1
+  Parameters: []
+  MinDistance: 1
+  MaxDistance: 20
+  Length: 100
 --- !u!114 &11400000
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -100,16 +127,25 @@ MonoBehaviour:
   - {fileID: -4383538444673263487}
   EditorEvents:
   - {fileID: -9218521528245039978}
+  - {fileID: 9076034212685872381}
+  - {fileID: 8733534355092726361}
+  - {fileID: -2229986527137261142}
   EditorParameters: []
   MasterBanks:
   - {fileID: -4383538444673263487}
   StringsBanks:
   - {fileID: -3514624063930182634}
   cacheVersion: 131860
-  cacheTime: 639238932773368682
+  cacheTime: 639239001621669465
   SerializableEventsDict:
   - key: event:/Footsteps
     index: 0
+  - key: event:/Jump
+    index: 1
+  - key: event:/Spin
+    index: 2
+  - key: event:/Skid
+    index: 3
 --- !u!114 &3300903613083432952
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -157,3 +193,57 @@ MonoBehaviour:
   MinDistance: 1
   MaxDistance: 20
   Length: 676
+--- !u!114 &8733534355092726361
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ceb653cd98e289a4e8697a1af55201f2, type: 3}
+  m_Name: event:/Spin
+  m_EditorClassIdentifier: FMODUnityEditor::FMODUnity.EditorEventRef
+  Path: event:/Spin
+  Guid:
+    Data1: -2037438526
+    Data2: 1137907855
+    Data3: 2105490869
+    Data4: -1321954566
+  Banks:
+  - {fileID: -4383538444673263487}
+  IsStream: 1
+  Is3D: 0
+  IsOneShot: 1
+  Parameters: []
+  MinDistance: 1
+  MaxDistance: 20
+  Length: 600
+--- !u!114 &9076034212685872381
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ceb653cd98e289a4e8697a1af55201f2, type: 3}
+  m_Name: event:/Jump
+  m_EditorClassIdentifier: FMODUnityEditor::FMODUnity.EditorEventRef
+  Path: event:/Jump
+  Guid:
+    Data1: -19855553
+    Data2: 1192498274
+    Data3: 1318516132
+    Data4: -2041523303
+  Banks:
+  - {fileID: -4383538444673263487}
+  IsStream: 0
+  Is3D: 0
+  IsOneShot: 1
+  Parameters: []
+  MinDistance: 1
+  MaxDistance: 20
+  Length: 1500

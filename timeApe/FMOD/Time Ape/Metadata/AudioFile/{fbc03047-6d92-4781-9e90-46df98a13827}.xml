@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<objects serializationModel="Studio.02.03.00">
+	<object class="AudioFile" id="{fbc03047-6d92-4781-9e90-46df98a13827}">
+		<property name="assetPath">
+			<value>Time Ape/Jump/Footsteps, Human, Grass, Jump, Start SND62075 1.wav</value>
+		</property>
+		<property name="frequencyInKHz">
+			<value>96</value>
+		</property>
+		<property name="channelCount">
+			<value>1</value>
+		</property>
+		<property name="length">
+			<value>8.2726041666666674</value>
+		</property>
+		<relationship name="masterAssetFolder">
+			<destination>{d143743f-a378-443c-af89-79086c4c8730}</destination>
+		</relationship>
+	</object>
+</objects>

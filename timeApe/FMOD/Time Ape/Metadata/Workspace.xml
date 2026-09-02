@@ -2,7 +2,7 @@
 <objects serializationModel="Studio.02.03.00">
 	<object class="Workspace" id="{83d93eb4-26e6-47ee-936e-db776a72d53d}">
 		<property name="builtBanksOutputDirectory">
-			<value>../../../../../Documents/GitHub/Project-Ape/timeApe/FMOD</value>
+			<value>../</value>
 		</property>
 		<relationship name="masterEventFolder">
 			<destination>{64bc919c-2ec5-4f0f-8f69-743b459aede3}</destination>
