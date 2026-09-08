@@ -44,6 +44,11 @@ public class ThirdPersonController : MonoBehaviour
     public float spinAngleTrigger = 720f;
     public float spinTimeout = 0.20f;
 
+    [Header("Roll")]
+    public float rollDash = 25f;
+    public float rollDuration = 0.2f;
+
+
     [Header("Audio Stuff")]
     public GameObject Player;
     [SerializeField] EventReference FootstepEvent;
@@ -76,6 +81,8 @@ public class ThirdPersonController : MonoBehaviour
     private bool isWalking;
     private bool jumpAudioCheck;
     private bool spinAudioCheck;
+    private bool Airlock;
+    private bool rollState;
 
     private float verticalLookRotation;
     private float speed;
@@ -84,6 +91,8 @@ public class ThirdPersonController : MonoBehaviour
     private float clockoyote = 0f;
     private float skidTimer;
     private float movementBlockTimer;
+    private float midSpeed;
+    private float rollTimer = 0f;
 
     private int spinDirection = 0;
 
@@ -98,7 +107,7 @@ public class ThirdPersonController : MonoBehaviour
     private Vector3 moveDirection;
     private Vector3 lastMoveDirection;
     private Vector3 launchDirection;
-
+    private Vector3 rollDirection;
 
 
 
@@ -152,6 +161,12 @@ public class ThirdPersonController : MonoBehaviour
         {
             jumpHold = false;
         };
+
+        inputActions.Player.Roll.performed += ctx =>
+        {
+            RollDetect(); 
+        };
+
     }
 
     void OnDisable()
@@ -163,6 +178,8 @@ public class ThirdPersonController : MonoBehaviour
     {
         RotateCamera();
         RotateModel();
+        Debug.Log(Airlock);
+        Roll();
         AudioChecks();
 
         //Makes movement obey deadzones
@@ -244,7 +261,6 @@ public class ThirdPersonController : MonoBehaviour
     void Move() //HANDLES HORIZONTAL MOVEMENT SPEED
     {
         float inputMagnitude = Mathf.Clamp01(moveInput.magnitude);
-        float midSpeed;
         //ifelse used to let keyboard users walk using shift.
         if (!controller.isGrounded)
         {
@@ -403,6 +419,7 @@ public class ThirdPersonController : MonoBehaviour
                 rotationCheck = 0f;
                 spinDirection = 0;
                 isSpinning = false;
+                spinCooldownTimer = 0f;
                 return;
             }
 
@@ -412,12 +429,12 @@ public class ThirdPersonController : MonoBehaviour
 
                 if (Mathf.Abs(angleDelta) > 2f)
                 {
-                    spinCooldownTimer = spinTimeout;
                     int currentDirection = angleDelta > 0 ? 1 : -1;
 
                     if (spinDirection == 0) //detects beginning of spin
                     {
                         spinDirection = currentDirection;
+                        spinCooldownTimer = spinTimeout;
                     }
 
                     if (currentDirection == spinDirection) //checks if the joystick goes to the same direction, if it does, add to the spin charge
@@ -428,13 +445,20 @@ public class ThirdPersonController : MonoBehaviour
                     {
                         rotationCheck = 0f;
                         spinDirection = currentDirection;
+                        spinCooldownTimer = spinTimeout;
                     }
                 }
-                spinCooldownTimer -= Time.deltaTime;
+
+                if (spinCooldownTimer != 0)
+                {
+                    spinCooldownTimer -= Time.deltaTime;
+                }
 
                 if (spinCooldownTimer <= 0f) //will not trigger the spin if the spin action is too slow, prvents it from triggering during a normal turn
                 {
                     isSpinning = false;
+                    spinDirection = 0;
+                    rotationCheck = 0;
                 }
 
                 if ((rotationCheck) >= spinAngleTrigger)
@@ -540,6 +564,39 @@ public class ThirdPersonController : MonoBehaviour
         }
     }
 
+    void RollDetect() //TRIGGERS BOOLEANS AND TIMES WHEN PLAYER PRESSES THE ROLL BUTTON
+    {
+        if (rollState) return; //prevent user input from spamming.
+
+        rollTimer = rollDuration; //starts the roll
+        rollState = true; //tells roll() in update to run properly.
+    }
+
+    void Roll() //PERFORMS THE ACTUAL ROLL
+    {
+        if (controller.isGrounded) // Airlock permits player to only roll once middair, preventing infinite spam.
+        {
+            Airlock = false;
+        }
+        if (!rollState) return;
+
+        launchDirection = MoveDirect();
+        rollTimer -= Time.deltaTime;
+
+        if (moveInput.magnitude > deadZone && !Airlock) //checks that the player is actually moving towards somewhere, preventing mistriggers with no input
+        {
+            velocity = launchDirection * rollDash;
+        }
+
+        if (rollTimer <= 0f ) //once the roll is over, reset everything and activate Airlock if the player hasn't hit the ground,
+        {
+            rollState = false;
+            velocity.x = 0f;
+            velocity.z = 0f;
+            Airlock = true;
+        }
+    }
+
 
     /*
          --------------------------------------- AUDIO FUNCTIONS ----------------------------------------------------------------------------------
@@ -587,7 +644,6 @@ public class ThirdPersonController : MonoBehaviour
         {
             if(skidTime >= skidDuration)
             {
-                Debug.Log("hi");
                 SkidSound();
                 skidTime = 0f;
             }
