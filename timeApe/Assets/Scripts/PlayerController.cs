@@ -3,10 +3,12 @@ using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.Rendering;
 using FMODUnity;
+using System.Dynamic;
 
 [RequireComponent(typeof(CharacterController))]
 public class ThirdPersonController : MonoBehaviour
 {
+    #region Variables
     [Header("Camera")]
     public Transform cameraTransform; //The Camera pivot goes here in editor
 
@@ -51,20 +53,26 @@ public class ThirdPersonController : MonoBehaviour
 
     [Header("Audio Stuff")]
     public GameObject Player;
+    FMOD.Studio.EventInstance FootstepsSound;
     [SerializeField] EventReference FootstepEvent;
     public float FootstepRate = .4f;
     private float StepTime = 0f;
 
 
     [SerializeField] EventReference JumpEvent;
+    FMOD.Studio.EventInstance JumpSound;
 
 
     [SerializeField] EventReference SpinEvent;
-    public float SpinRate = .6f;
-    private float SpinTime = 0f;
+    FMOD.Studio.EventInstance SpinSound;
 
     [SerializeField] EventReference SkidEvent;
+    FMOD.Studio.EventInstance SkidSound;
     private float skidTime = 0f;
+
+    [SerializeField] EventReference RollEvent;
+    FMOD.Studio.EventInstance RollSound;
+    private float RollTime = 0f;
 
 
     //private variables
@@ -108,22 +116,10 @@ public class ThirdPersonController : MonoBehaviour
     private Vector3 lastMoveDirection;
     private Vector3 launchDirection;
     private Vector3 rollDirection;
+    #endregion
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+    #region Execution Functions
     /*
     --------------------------------------- UNITY'S EXECUTION FUNCTIONS -----------------------------------------------------------------------
     */
@@ -132,6 +128,14 @@ public class ThirdPersonController : MonoBehaviour
     {
         controller = GetComponent<CharacterController>(); //Start taking information from controller input
         inputActions = new PlayerInput();
+
+        //audio variables
+        FootstepsSound = FMODUnity.RuntimeManager.CreateInstance(FootstepEvent);
+        JumpSound = FMODUnity.RuntimeManager.CreateInstance(JumpEvent);
+        SpinSound = FMODUnity.RuntimeManager.CreateInstance(SpinEvent);
+        SkidSound = FMODUnity.RuntimeManager.CreateInstance(SkidEvent);
+        RollSound = FMODUnity.RuntimeManager.CreateInstance(RollEvent);
+        Debug.Log(spinTimeout);
     }
 
     void OnEnable()
@@ -164,7 +168,7 @@ public class ThirdPersonController : MonoBehaviour
 
         inputActions.Player.Roll.performed += ctx =>
         {
-            RollDetect(); 
+            RollDetect();
         };
 
     }
@@ -178,7 +182,6 @@ public class ThirdPersonController : MonoBehaviour
     {
         RotateCamera();
         RotateModel();
-        Debug.Log(Airlock);
         Roll();
         AudioChecks();
 
@@ -222,19 +225,10 @@ public class ThirdPersonController : MonoBehaviour
 
         DetectSpin();
     }
+    #endregion
 
 
-
-
-
-
-
-
-
-
-
-
-
+    #region Main Functions
     /*
      --------------------------------------- MAIN FUNCTIONS ----------------------------------------------------------------------------------
      */
@@ -435,6 +429,7 @@ public class ThirdPersonController : MonoBehaviour
                     {
                         spinDirection = currentDirection;
                         spinCooldownTimer = spinTimeout;
+                        spinAudioCheck = true;
                     }
 
                     if (currentDirection == spinDirection) //checks if the joystick goes to the same direction, if it does, add to the spin charge
@@ -446,6 +441,7 @@ public class ThirdPersonController : MonoBehaviour
                         rotationCheck = 0f;
                         spinDirection = currentDirection;
                         spinCooldownTimer = spinTimeout;
+                        spinAudioCheck = true;
                     }
                 }
 
@@ -588,7 +584,7 @@ public class ThirdPersonController : MonoBehaviour
             velocity = launchDirection * rollDash;
         }
 
-        if (rollTimer <= 0f ) //once the roll is over, reset everything and activate Airlock if the player hasn't hit the ground,
+        if (rollTimer <= 0f) //once the roll is over, reset everything and activate Airlock if the player hasn't hit the ground,
         {
             rollState = false;
             velocity.x = 0f;
@@ -596,77 +592,84 @@ public class ThirdPersonController : MonoBehaviour
             Airlock = true;
         }
     }
+    #endregion
 
 
+    #region Audio Functions
     /*
          --------------------------------------- AUDIO FUNCTIONS ----------------------------------------------------------------------------------
          */
     void AudioChecks() //contains all the checks for movement sounds
     {
         StepTime += Time.deltaTime;
-        SpinTime += Time.deltaTime;
         skidTime += Time.deltaTime;
+        RollTime += Time.deltaTime;
 
         //footsteps sound
 
-        if (isWalking && isNearGround && !isSkidding && !isSpinning && !jumped && !isBackflipping)
+        if (isWalking && isNearGround && !isSkidding && !isSpinning && !jumped && !isBackflipping && !rollState)
         {
             if (StepTime >= FootstepRate)
             {
-                FootstepsSound();
+                FootstepsSound.start();
                 StepTime = 0f;
             }
+        }
+        else if (isSkidding || isSpinning || jumped || isBackflipping || rollState)
+        {
+            FootstepsSound.stop(FMOD.Studio.STOP_MODE.ALLOWFADEOUT);
         }
 
         //jump sound
 
         if (jumpAudioCheck && jumped)
         {
-            JumpSound();
+            JumpSound.start();
             jumpAudioCheck = false;
 
         }
 
         //spinning sound
 
-        if (isSpinning && isWalking)
+        if (isSpinning && spinAudioCheck)
         {
-            if (SpinTime >= SpinRate)
-            {
-                SpinSound();
-                SpinTime = 0f;
-            }
+            Debug.Log("i");
+            SpinSound.start();
+            spinAudioCheck = false;
+        }
+        
+        if(!isSpinning)
+        {
+            SpinSound.stop(FMOD.Studio.STOP_MODE.ALLOWFADEOUT);
         }
 
         //skid sound
 
-        if (isSkidding)
+        if (isSkidding && isNearGround)
         {
-            if(skidTime >= skidDuration)
+            if (skidTime >= skidDuration + .2f)
             {
-                SkidSound();
+                SkidSound.start();
                 skidTime = 0f;
             }
         }
-    }
+        else
+        {
+            SkidSound.stop(FMOD.Studio.STOP_MODE.ALLOWFADEOUT);
+        }
 
-    void FootstepsSound()
-    {
-        RuntimeManager.PlayOneShotAttached(FootstepEvent, Player);
+        if (rollState)
+        {
+            if (RollTime >= rollDuration + .2f)
+            {
+                RollSound.start();
+                RollTime = 0f;
+            }
+        }
+        else
+        {
+            RollSound.stop(FMOD.Studio.STOP_MODE.ALLOWFADEOUT);
+        }
     }
-
-    void JumpSound()
-    {
-        RuntimeManager.PlayOneShotAttached(JumpEvent, Player);
-    }
-
-    void SpinSound()
-    {
-        RuntimeManager.PlayOneShotAttached(SpinEvent, Player);
-    }
-
-    void SkidSound()
-    {
-        RuntimeManager.PlayOneShotAttached(SkidEvent, Player);
-    }
+    #endregion
 }

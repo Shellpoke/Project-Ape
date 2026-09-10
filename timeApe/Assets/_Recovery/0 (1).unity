@@ -209301,28 +209301,8 @@ PrefabInstance:
       value: 0.65
       objectReference: {fileID: 0}
     - target: {fileID: 902052519996820736, guid: 1f1709056ffa52a4e8e7047b2eb430c3, type: 3}
-      propertyPath: RollEvent.Path
-      value: event:/Roll
-      objectReference: {fileID: 0}
-    - target: {fileID: 902052519996820736, guid: 1f1709056ffa52a4e8e7047b2eb430c3, type: 3}
       propertyPath: wallJumpVertical
       value: 15
-      objectReference: {fileID: 0}
-    - target: {fileID: 902052519996820736, guid: 1f1709056ffa52a4e8e7047b2eb430c3, type: 3}
-      propertyPath: RollEvent.Guid.Data1
-      value: 70123582
-      objectReference: {fileID: 0}
-    - target: {fileID: 902052519996820736, guid: 1f1709056ffa52a4e8e7047b2eb430c3, type: 3}
-      propertyPath: RollEvent.Guid.Data2
-      value: 1312011461
-      objectReference: {fileID: 0}
-    - target: {fileID: 902052519996820736, guid: 1f1709056ffa52a4e8e7047b2eb430c3, type: 3}
-      propertyPath: RollEvent.Guid.Data3
-      value: -220687177
-      objectReference: {fileID: 0}
-    - target: {fileID: 902052519996820736, guid: 1f1709056ffa52a4e8e7047b2eb430c3, type: 3}
-      propertyPath: RollEvent.Guid.Data4
-      value: 666510301
       objectReference: {fileID: 0}
     - target: {fileID: 2782907790892054914, guid: 1f1709056ffa52a4e8e7047b2eb430c3, type: 3}
       propertyPath: m_Name

@@ -60,7 +60,7 @@ MonoBehaviour:
   Path: FMOD/Desktop/Master.bank
   Name: Master
   StudioPath: bank:/Master
-  lastModified: 639243791837866570
+  lastModified: 639245801308751536
   FileSizes: []
   Exists: 1
 --- !u!114 &-3514624063930182634
@@ -78,11 +78,38 @@ MonoBehaviour:
   Path: FMOD/Desktop/Master.strings.bank
   Name: Master.strings
   StudioPath: bank:/Master.strings
-  lastModified: 639243791837881366
+  lastModified: 639245801308766642
   FileSizes:
   - Name: 
-    Value: 898
+    Value: 934
   Exists: 1
+--- !u!114 &-2775251435581994319
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ceb653cd98e289a4e8697a1af55201f2, type: 3}
+  m_Name: event:/Roll
+  m_EditorClassIdentifier: FMODUnityEditor::FMODUnity.EditorEventRef
+  Path: event:/Roll
+  Guid:
+    Data1: 70123582
+    Data2: 1312011461
+    Data3: -220687177
+    Data4: 666510301
+  Banks:
+  - {fileID: -4383538444673263487}
+  IsStream: 0
+  Is3D: 0
+  IsOneShot: 1
+  Parameters: []
+  MinDistance: 1
+  MaxDistance: 20
+  Length: 1312
 --- !u!114 &-2229986527137261142
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -109,7 +136,7 @@ MonoBehaviour:
   Parameters: []
   MinDistance: 1
   MaxDistance: 20
-  Length: 100
+  Length: 585
 --- !u!114 &11400000
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -130,13 +157,14 @@ MonoBehaviour:
   - {fileID: 9076034212685872381}
   - {fileID: 8733534355092726361}
   - {fileID: -2229986527137261142}
+  - {fileID: -2775251435581994319}
   EditorParameters: []
   MasterBanks:
   - {fileID: -4383538444673263487}
   StringsBanks:
   - {fileID: -3514624063930182634}
   cacheVersion: 131860
-  cacheTime: 639243791837881366
+  cacheTime: 639245801308766642
   SerializableEventsDict:
   - key: event:/Footsteps
     index: 0
@@ -146,6 +174,8 @@ MonoBehaviour:
     index: 2
   - key: event:/Skid
     index: 3
+  - key: event:/Roll
+    index: 4
 --- !u!114 &3300903613083432952
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -215,7 +245,7 @@ MonoBehaviour:
   - {fileID: -4383538444673263487}
   IsStream: 1
   Is3D: 0
-  IsOneShot: 1
+  IsOneShot: 0
   Parameters: []
   MinDistance: 1
   MaxDistance: 20
